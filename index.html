@@ -126,6 +126,16 @@ img, video, canvas, svg { max-width: 100%; max-height: 100%; }
 }
 .deck-controls button:hover { color: var(--paper); }
 .deck-controls .page-num { color: var(--paper); font-variant-numeric: tabular-nums; }
+.deck-controls #curPage {
+    width: 2.4em; text-align: center; color: var(--paper);
+    background: rgba(244,198,163,0.12); border: 1px solid rgba(244,198,163,0.35);
+    border-radius: 8px; padding: 2px 4px; font-family: var(--font-sans);
+    font-size: inherit; font-variant-numeric: tabular-nums; outline: none;
+    transition: all 0.2s;
+}
+.deck-controls #curPage:focus { border-color: var(--durazno); background: rgba(244,198,163,0.22); }
+.deck-controls #curPage::-webkit-inner-spin-button,
+.deck-controls #curPage::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
 
 @media print {
     html, body { width: 1920px; height: auto; overflow: visible; background: #fff; }
@@ -2984,7 +2994,7 @@ h3 { font-size: var(--fs-lead); }
 
 <div class="deck-controls">
     <button id="prevBtn" aria-label="Anterior">◄</button>
-    <span class="page-num"><span id="curPage">1</span> <span style="opacity:.4">/</span> <span id="totPage">42</span></span>
+    <span class="page-num"><input id="curPage" type="number" min="1" value="1" aria-label="Ir a slide" title="Escribí un número y Enter para saltar"> <span style="opacity:.4">/</span> <span id="totPage">42</span></span>
     <button id="nextBtn" aria-label="Siguiente">►</button>
 </div>
 
@@ -3001,10 +3011,12 @@ class SlidePresentation {
         this.curPage = document.getElementById('curPage');
         this.totPage = document.getElementById('totPage');
         this.totPage.textContent = this.slides.length;
+        this.curPage.max = this.slides.length;
         this.setupStageScale();
         this.setupKeyboardNav();
         this.setupTouchNav();
         this.setupButtons();
+        this.setupPageInput();
         this.showSlide(0);
     }
 
@@ -3021,6 +3033,7 @@ class SlidePresentation {
 
     setupKeyboardNav() {
         document.addEventListener('keydown', (e) => {
+            if (e.target === this.curPage) return; // no interferir mientras se escribe el número
             if (['ArrowRight','PageDown',' '].includes(e.key)) { this.next(); e.preventDefault(); }
             else if (['ArrowLeft','PageUp'].includes(e.key))    { this.prev(); e.preventDefault(); }
             else if (e.key === 'Home')                          { this.showSlide(0); }
@@ -3039,6 +3052,19 @@ class SlidePresentation {
         document.getElementById('prevBtn').addEventListener('click', () => this.prev());
         document.getElementById('nextBtn').addEventListener('click', () => this.next());
     }
+    setupPageInput() {
+        const jump = () => {
+            const n = parseInt(this.curPage.value, 10);
+            if (!isNaN(n)) this.showSlide(n - 1);
+            else this.curPage.value = this.currentSlide + 1;
+        };
+        this.curPage.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') { jump(); this.curPage.blur(); }
+            e.stopPropagation();
+        });
+        this.curPage.addEventListener('change', jump);
+        this.curPage.addEventListener('focus', () => this.curPage.select());
+    }
     next() { this.showSlide(this.currentSlide + 1); }
     prev() { this.showSlide(this.currentSlide - 1); }
     showSlide(idx) {
@@ -3049,7 +3075,7 @@ class SlidePresentation {
         });
         const pct = ((this.currentSlide + 1) / this.slides.length) * 100;
         this.progress.style.width = pct + '%';
-        this.curPage.textContent = this.currentSlide + 1;
+        this.curPage.value = this.currentSlide + 1;
     }
 }
 document.addEventListener('DOMContentLoaded', () => new SlidePresentation());
