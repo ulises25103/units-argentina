@@ -680,6 +680,10 @@ h3 { font-size: var(--fs-lead); }
     text-align: center;
     min-height: 320px;
 }
+/* When an eq-block also carries a colored card class, the card background must win */
+.eq-block.card-ciruela { background: var(--ciruela); }
+.eq-block.card-malva { background: var(--malva); }
+.eq-block.card-durazno { background: var(--durazno); }
 .eq-block .amount {
     font-family: var(--font-serif); font-weight: 500;
     font-size: 96px; line-height: 1; color: var(--ciruela);
@@ -1239,7 +1243,7 @@ h3 { font-size: var(--fs-lead); }
         <div style="margin-top:56px; width:100%;">
             <div class="reveal delay-2" style="position:relative; padding:60px 0;">
                 <!-- Línea guía -->
-                <div style="position:absolute; top:80px; left:40px; right:40px; height:1px; background:var(--line);"></div>
+                <div style="position:absolute; top:100px; left:40px; right:40px; height:1px; background:var(--line); z-index:0;"></div>
 
                 <div style="display:grid; grid-template-columns:repeat(10, 1fr); gap:0;">
                     <!-- 10 nodos -->
@@ -2361,18 +2365,19 @@ h3 { font-size: var(--fs-lead); }
         <div class="col-golden-rev full-h items-center">
             <!-- Gauge SVG -->
             <div class="reveal-scale delay-2" style="display:flex; justify-content:center; align-items:center;">
-                <svg width="520" height="520" viewBox="0 0 400 400">
+                <svg width="460" height="460" viewBox="0 0 400 400">
                     <!-- Círculo track -->
-                    <circle cx="200" cy="200" r="150" fill="none" stroke="#EFE7DF" stroke-width="42"/>
-                    <!-- Círculo fill (aplicado: 15% del total = arc) -->
-                    <circle cx="200" cy="200" r="150" fill="none" stroke="#5E2A4E" stroke-width="42"
-                            stroke-dasharray="942.5" stroke-dashoffset="800"
+                    <circle cx="200" cy="200" r="150" fill="none" stroke="#E4D6CA" stroke-width="34"/>
+                    <!-- Círculo fill (aplicado: 14,5% del total = arc) -->
+                    <circle cx="200" cy="200" r="150" fill="none" stroke="#5E2A4E" stroke-width="34"
+                            stroke-dasharray="942.5" stroke-dashoffset="806"
                             transform="rotate(-90 200 200)"
-                            style="transition: stroke-dashoffset 1.6s var(--ease-editorial); stroke-linecap:butt;"/>
+                            stroke-linecap="round"
+                            style="transition: stroke-dashoffset 1.6s var(--ease-editorial);"/>
                     <!-- Texto central -->
-                    <text x="200" y="180" text-anchor="middle" font-family="Manrope" font-size="14" font-weight="700" letter-spacing="3" fill="#B88CA7">CAPACIDAD APLICADA</text>
-                    <text x="200" y="230" text-anchor="middle" font-family="Fraunces" font-size="72" font-weight="500" fill="#5E2A4E">14,5%</text>
-                    <text x="200" y="260" text-anchor="middle" font-family="Fraunces" font-style="italic" font-size="18" fill="#8A7E86">120 de 825 h</text>
+                    <text x="200" y="166" text-anchor="middle" font-family="Manrope" font-size="13" font-weight="700" letter-spacing="3" fill="#B88CA7">CAPACIDAD APLICADA</text>
+                    <text x="200" y="224" text-anchor="middle" font-family="Fraunces" font-size="62" font-weight="500" fill="#5E2A4E">14,5%</text>
+                    <text x="200" y="258" text-anchor="middle" font-family="Fraunces" font-style="italic" font-size="17" fill="#8A7E86">120 de 825 h</text>
                 </svg>
             </div>
 
